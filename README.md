@@ -30,7 +30,7 @@ Bootstrap Tour is inspired by [Joyride](http://www.zurb.com/playground/jquery-jo
 	/* Each tip is set within this <ol>. */
 	/* This creates the order the tips are displayed */
 	<ol id="chooseID">
-	  /* data-id needs to be the same as the parent it will attach to */
+	  /* data-target needs to be the same as the parent it will attach to */
 	  <li data-target="#newHeader">Tip content...</li>
 	  /* using 'data-title' lets you have custom title */
 	  <li data-target="#parentElementID" data-title="Second Feature">Content...</li>
