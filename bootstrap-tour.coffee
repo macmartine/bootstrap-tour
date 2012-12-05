@@ -35,6 +35,7 @@ $.fn.extend {}=
   featureTour: (options) ->
     # Default settings
     settings =
+      html: false
       tipContent: '#featureTourTipContent' # What is the ID of the <ol> you put the content in
       cookieMonster: false                 # true or false to control whether cookies are used
       cookieName: 'bootstrapFeatureTour'   # Name the cookie you'll use
@@ -43,14 +44,14 @@ $.fn.extend {}=
       postStepCallback: $.noop             # A method to call after each step
       nextOnClose: false                   # If cookies are enabled, increment the current step on close
       debug: false
-      
+
     # Merge default settings with options.
     settings = $.extend settings, options
-    
+
     # Simple logger.
     log = (msg) ->
       console?.log('[bootstrap-tour]', msg) if settings.debug
-    
+
     # returns current step stored in the cookie, or `1` if cookie disabled, no
     # cookie or invalid cookie value
     currentStep = ->
@@ -72,7 +73,7 @@ $.fn.extend {}=
       $tipContent = $(settings.tipContent).first()
       unless $tipContent?
         log "can't find tipContent from selector: #{settings.tipContent}"
-      
+
       $tips = $tipContent.find('li')
 
       first_step = currentStep()
@@ -80,7 +81,7 @@ $.fn.extend {}=
 
       if first_step > $tips.length
         log 'tour already completed, skipping'
-        return 
+        return
 
       $tips.each (idx) ->
         # skip steps until we reach the first one
@@ -92,16 +93,17 @@ $.fn.extend {}=
         tip_data = $li.data()
         return unless (target = tip_data['target'])?
         return unless ($target = $(target).first())?
-        
+
         $target.popover
+          html: tip_data['html']
           trigger: 'manual'
           title: if tip_data['title']? then "#{tip_data['title']} <a class=\"tour-tip-close close\" data-touridx=\"#{idx + 1}\">&times;</a>" else null
           content: "<p>#{$li.html()}</p><p style=\"text-align: right\"><a href=\"#\" class=\"tour-tip-next btn btn-success\" data-touridx=\"#{idx + 1}\">#{if (idx + 1) < $tips.length then 'Next <i class="icon-chevron-right icon-white"></i>' else '<i class="icon-ok icon-white"></i> Done'}</a></p>"
           placement: tip_data['placement'] || 'right'
-        
+
         # save the target element in the tip node
         $li.data('target', $target)
-        
+
         # show the first tip
         $target.popover('show') if idx == (first_step - 1)
 
@@ -123,4 +125,4 @@ $.fn.extend {}=
           next_tip.popover('show')
         else
           # last tip
-          settings.postRideCallback() if settings.postRideCallback != $.noop 
+          settings.postRideCallback() if settings.postRideCallback != $.noop
